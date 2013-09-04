@@ -95,6 +95,7 @@ func TestBloomFilter(t *testing.T) {
 				bf := New(l[i])
 				bf.SetHasher(h[j])
 				bf.(*ScalableBloom).SetBloomFilter(b[k])
+				bf.Reset()
 				testBloomFilter(t, bf)
 			}
 		}
@@ -131,6 +132,7 @@ func BenchmarkBloomCRC32(b *testing.B) {
 
 	bf := New(uint(b.N))
 	bf.SetHasher(crc64.New(crc64.MakeTable(crc64.ECMA)))
+	bf.Reset()
 	fn := 0
 
 	b.ResetTimer()
@@ -153,6 +155,7 @@ func BenchmarkBloomMurmur3(b *testing.B) {
 
 	bf := New(uint(b.N))
 	bf.SetHasher(murmur3.New64())
+	bf.Reset()
 	fn := 0
 
 	b.ResetTimer()
@@ -175,6 +178,7 @@ func BenchmarkBloomCityHash(b *testing.B) {
 
 	bf := New(uint(b.N))
 	bf.SetHasher(cityhash.New64())
+	bf.Reset()
 	fn := 0
 
 	b.ResetTimer()
@@ -197,6 +201,7 @@ func BenchmarkBloomMD5(b *testing.B) {
 
 	bf := New(uint(b.N))
 	bf.SetHasher(md5.New())
+	bf.Reset()
 	fn := 0
 
 	b.ResetTimer()
@@ -219,6 +224,7 @@ func BenchmarkBloomSha1(b *testing.B) {
 
 	bf := New(uint(b.N))
 	bf.SetHasher(sha1.New())
+	bf.Reset()
 	fn := 0
 
 	b.ResetTimer()

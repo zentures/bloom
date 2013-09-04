@@ -166,7 +166,7 @@ func (this *ScalableBloom) addBloomFilter() {
 
 	e := this.e * math.Pow(float64(this.r), float64(len(this.bfs)))
 
-	//bf.SetHasher(this.h)
+	bf.SetHasher(this.h)
 	bf.SetErrorProbability(e)
 	bf.Reset()
 

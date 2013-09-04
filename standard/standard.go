@@ -111,7 +111,7 @@ func (this *StandardBloom) SetErrorProbability(e float64) {
 }
 
 func (this *StandardBloom) EstimatedFillRatio() float64 {
-	return 1-math.Exp(-float64(this.c)/float64(this.m))
+	return 1-math.Exp((-float64(this.c)*float64(this.k))/float64(this.m))
 }
 
 func (this *StandardBloom) FillRatio() float64 {
