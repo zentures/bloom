@@ -65,6 +65,9 @@ type StandardBloom struct {
 
 	// c is the number of items we have added to the filter
 	c uint
+
+	// bs holds the list of bits to be set/check based on the hash values
+	bs []uint
 }
 
 var _ bloom.Bloom = (*StandardBloom)(nil)
@@ -87,6 +90,7 @@ func New(n uint) bloom.Bloom {
 		k: k,
 		m: m,
 		b: bitset.New(m),
+		bs: make([]uint, k),
 	}
 }
 
@@ -98,6 +102,7 @@ func (this *StandardBloom) Reset() {
 	this.k = bloom.K(this.e)
 	this.m = bloom.M(this.n, this.p, this.e)
 	this.b = bitset.New(this.m)
+	this.bs = make([]uint, this.k)
 
 	if this.h == nil {
 		this.h = fnv.New64()
@@ -119,18 +124,18 @@ func (this *StandardBloom) FillRatio() float64 {
 }
 
 func (this *StandardBloom) Add(item []byte) bloom.Bloom {
-	bs := this.bits(item)
+	this.bits(item)
 	for i := uint(0); i < this.k; i++ {
-		this.b.Set(bs[i])
+		this.b.Set(this.bs[i])
 	}
 	this.c++
 	return this
 }
 
 func (this *StandardBloom) Check(item []byte) bool {
-	bs := this.bits(item)
+	this.bits(item)
 	for i := uint(0); i < this.k; i++ {
-		if !this.b.Test(bs[i]) {
+		if !this.b.Test(this.bs[i]) {
 			return false
 		}
 	}
@@ -149,19 +154,16 @@ func (this *StandardBloom) PrintStats() {
 }
 
 
-func (this *StandardBloom) bits(item []byte) []uint {
+func (this *StandardBloom) bits(item []byte) {
 	this.h.Reset()
 	this.h.Write(item)
 	s := this.h.Sum(nil)
 	a := binary.BigEndian.Uint32(s[4:8])
 	b := binary.BigEndian.Uint32(s[0:4])
-	bs := make([]uint, this.k)
 
 	// Reference: Less Hashing, Same Performance: Building a Better Bloom Filter
 	// URL: http://www.eecs.harvard.edu/~kirsch/pubs/bbbf/rsa.pdf
 	for i := uint(0); i < this.k; i++ {
-		bs[i] = (uint(a) + uint(b)*i) % this.m
+		this.bs[i] = (uint(a) + uint(b)*i) % this.m
 	}
-
-	return bs
 }

@@ -69,6 +69,9 @@ type PartitionedBloom struct {
 
 	// b is the set of bit array holding the bloom filters. There will be k b's.
 	b []*bitset.BitSet
+
+	// bs holds the list of bits to be set/check based on the hash values
+	bs []uint
 }
 
 var _ bloom.Bloom = (*PartitionedBloom)(nil)
@@ -93,6 +96,7 @@ func New(n uint) bloom.Bloom {
 		m: m,
 		s: s,
 		b: makePartitions(k, s),
+		bs: make([]uint, k),
 	}
 }
 
@@ -105,6 +109,7 @@ func (this *PartitionedBloom) Reset() {
 	this.m = bloom.M(this.n, this.p, this.e)
 	this.s = bloom.S(this.m, this.k)
 	this.b = makePartitions(this.k, this.s)
+	this.bs = make([]uint, this.k)
 
 	if this.h == nil {
 		this.h = fnv.New64()
@@ -131,18 +136,18 @@ func (this *PartitionedBloom) FillRatio() float64 {
 }
 
 func (this *PartitionedBloom) Add(item []byte) bloom.Bloom {
-	bs := this.bits(item)
+	this.bits(item)
 	for i := uint(0); i < this.k; i++ {
-		this.b[i].Set(bs[i])
+		this.b[i].Set(this.bs[i])
 	}
 	this.c++
 	return this
 }
 
 func (this *PartitionedBloom) Check(item []byte) bool {
-	bs := this.bits(item)
+	this.bits(item)
 	for i := uint(0); i < this.k; i++ {
-		if !this.b[i].Test(bs[i]) {
+		if !this.b[i].Test(this.bs[i]) {
 			return false
 		}
 	}
@@ -164,21 +169,18 @@ func (this *PartitionedBloom) PrintStats() {
 }
 
 
-func (this *PartitionedBloom) bits(item []byte) []uint {
+func (this *PartitionedBloom) bits(item []byte) {
 	this.h.Reset()
 	this.h.Write(item)
 	s := this.h.Sum(nil)
 	a := binary.BigEndian.Uint32(s[4:8])
 	b := binary.BigEndian.Uint32(s[0:4])
-	bs := make([]uint, this.k)
 
 	// Reference: Less Hashing, Same Performance: Building a Better Bloom Filter
 	// URL: http://www.eecs.harvard.edu/~kirsch/pubs/bbbf/rsa.pdf
 	for i := uint(0); i < this.k; i++ {
-		bs[i] = (uint(a) + uint(b)*i) % this.s
+		this.bs[i] = (uint(a) + uint(b)*i) % this.s
 	}
-
-	return bs
 }
 
 func makePartitions(k, s uint) []*bitset.BitSet {

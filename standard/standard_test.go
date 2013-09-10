@@ -94,7 +94,7 @@ func TestBloomFilter(t *testing.T) {
 	}
 }
 
-func BenchmarkBloomDefaultHash(b *testing.B) {
+func BenchmarkBloomFNV64(b *testing.B) {
 	var lines []string
 	lines = append(lines, web2...)
 	for len(lines) < b.N {
@@ -115,7 +115,7 @@ func BenchmarkBloomDefaultHash(b *testing.B) {
 	b.StopTimer()
 }
 
-func BenchmarkBloomCRC32(b *testing.B) {
+func BenchmarkBloomCRC64(b *testing.B) {
 	var lines []string
 	lines = append(lines, web2...)
 	for len(lines) < b.N {
