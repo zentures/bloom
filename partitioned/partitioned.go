@@ -7,13 +7,13 @@
 package partitioned
 
 import (
-	"hash/fnv"
-	"hash"
 	"fmt"
+	"hash"
+	"hash/fnv"
 
+	"encoding/binary"
 	"github.com/willf/bitset"
 	"github.com/zhenjl/bloom"
-	"encoding/binary"
 	"math"
 )
 
@@ -82,20 +82,20 @@ func New(n uint) bloom.Bloom {
 	var (
 		p float64 = 0.5
 		e float64 = 0.001
-		k uint = bloom.K(e)
-		m uint = bloom.M(n, p, e)
-		s uint = bloom.S(m, k)
+		k uint    = bloom.K(e)
+		m uint    = bloom.M(n, p, e)
+		s uint    = bloom.S(m, k)
 	)
 
 	return &PartitionedBloom{
-		h: fnv.New64(),
-		n: n,
-		p: p,
-		e: e,
-		k: k,
-		m: m,
-		s: s,
-		b: makePartitions(k, s),
+		h:  fnv.New64(),
+		n:  n,
+		p:  p,
+		e:  e,
+		k:  k,
+		m:  m,
+		s:  s,
+		b:  makePartitions(k, s),
 		bs: make([]uint, k),
 	}
 }
@@ -123,16 +123,16 @@ func (this *PartitionedBloom) SetErrorProbability(e float64) {
 }
 
 func (this *PartitionedBloom) EstimatedFillRatio() float64 {
-	return 1-math.Exp(-float64(this.c)/float64(this.s))
+	return 1 - math.Exp(-float64(this.c)/float64(this.s))
 }
 
 func (this *PartitionedBloom) FillRatio() float64 {
 	// Since this is partitioned, we will return the average fill ratio of all partitions
 	t := float64(0)
 	for i := uint(0); i < this.k; i++ {
-		t += (float64(this.b[i].Count())/float64(this.s))
+		t += (float64(this.b[i].Count()) / float64(this.s))
 	}
-	return t/float64(this.k)
+	return t / float64(this.k)
 }
 
 func (this *PartitionedBloom) Add(item []byte) bloom.Bloom {
@@ -168,7 +168,6 @@ func (this *PartitionedBloom) PrintStats() {
 	}
 }
 
-
 func (this *PartitionedBloom) bits(item []byte) {
 	this.h.Reset()
 	this.h.Write(item)
@@ -192,4 +191,3 @@ func makePartitions(k, s uint) []*bitset.BitSet {
 
 	return b
 }
-

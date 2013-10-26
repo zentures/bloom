@@ -7,18 +7,18 @@
 package standard
 
 import (
-	"testing"
-	"fmt"
-	"os"
 	"bufio"
-	"hash/crc64"
-	"github.com/spaolacci/murmur3"
-	"hash/fnv"
-	"hash"
-	"github.com/zhenjl/bloom"
-	"github.com/zhenjl/cityhash"
 	"crypto/md5"
 	"crypto/sha1"
+	"fmt"
+	"github.com/spaolacci/murmur3"
+	"github.com/zhenjl/bloom"
+	"github.com/zhenjl/cityhash"
+	"hash"
+	"hash/crc64"
+	"hash/fnv"
+	"os"
+	"testing"
 )
 
 var (
@@ -75,8 +75,8 @@ func testBloomFilter(t *testing.T, bf bloom.Bloom) {
 		}
 	}
 
-	fmt.Printf("Total false negatives: %d (%.4f%%)\n", fn, (float32(fn)/float32(len(web2))*100))
-	fmt.Printf("Total false positives: %d (%.4f%%)\n", fp, (float32(fp)/float32(len(web2a))*100))
+	fmt.Printf("Total false negatives: %d (%.4f%%)\n", fn, (float32(fn) / float32(len(web2)) * 100))
+	fmt.Printf("Total false positives: %d (%.4f%%)\n", fp, (float32(fp) / float32(len(web2a)) * 100))
 }
 
 func TestBloomFilter(t *testing.T) {
