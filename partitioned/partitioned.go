@@ -12,7 +12,7 @@ import (
 	"fmt"
 
 	"github.com/willf/bitset"
-	"github.com/zhenjl/bloom"
+	"github.com/reducedb/bloom"
 	"encoding/binary"
 	"math"
 )

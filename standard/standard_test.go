@@ -15,8 +15,8 @@ import (
 	"github.com/spaolacci/murmur3"
 	"hash/fnv"
 	"hash"
-	"github.com/zhenjl/bloom"
-	"github.com/zhenjl/cityhash"
+	"github.com/reducedb/bloom"
+	"github.com/reducedb/cityhash"
 	"crypto/md5"
 	"crypto/sha1"
 )

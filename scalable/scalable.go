@@ -10,8 +10,8 @@ import (
 	"hash"
 	"hash/fnv"
 	"fmt"
-	"github.com/zhenjl/bloom"
-	"github.com/zhenjl/bloom/partitioned"
+	"github.com/reducedb/bloom"
+	"github.com/reducedb/bloom/partitioned"
 	"math"
 )
 
