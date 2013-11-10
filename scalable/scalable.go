@@ -97,6 +97,7 @@ func (this *ScalableBloom) Reset() {
 	}
 
 	this.bfs = []bloom.Bloom{}
+    this.c = 0
 	this.addBloomFilter()
 }
 
