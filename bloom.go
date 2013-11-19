@@ -7,8 +7,8 @@
 package bloom
 
 import (
-	"math"
 	"hash"
+	"math"
 )
 
 type Bloom interface {
@@ -24,7 +24,7 @@ type Bloom interface {
 }
 
 func K(e float64) uint {
-	return uint(math.Ceil(math.Log2(1/e)))
+	return uint(math.Ceil(math.Log2(1 / e)))
 }
 
 func M(n uint, p, e float64) uint {
@@ -35,5 +35,3 @@ func M(n uint, p, e float64) uint {
 func S(m, k uint) uint {
 	return uint(math.Ceil(float64(m) / float64(k)))
 }
-
-

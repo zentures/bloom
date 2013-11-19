@@ -7,13 +7,13 @@
 package partitioned
 
 import (
-	"hash/fnv"
-	"hash"
 	"fmt"
+	"hash"
+	"hash/fnv"
 
-	"github.com/willf/bitset"
-	"github.com/reducedb/bloom"
 	"encoding/binary"
+	"github.com/reducedb/bloom"
+	"github.com/willf/bitset"
 	"math"
 )
 
@@ -82,20 +82,20 @@ func New(n uint) bloom.Bloom {
 	var (
 		p float64 = 0.5
 		e float64 = 0.001
-		k uint = bloom.K(e)
-		m uint = bloom.M(n, p, e)
-		s uint = bloom.S(m, k)
+		k uint    = bloom.K(e)
+		m uint    = bloom.M(n, p, e)
+		s uint    = bloom.S(m, k)
 	)
 
 	return &PartitionedBloom{
-		h: fnv.New64(),
-		n: n,
-		p: p,
-		e: e,
-		k: k,
-		m: m,
-		s: s,
-		b: makePartitions(k, s),
+		h:  fnv.New64(),
+		n:  n,
+		p:  p,
+		e:  e,
+		k:  k,
+		m:  m,
+		s:  s,
+		b:  makePartitions(k, s),
 		bs: make([]uint, k),
 	}
 }
@@ -123,22 +123,22 @@ func (this *PartitionedBloom) SetErrorProbability(e float64) {
 }
 
 func (this *PartitionedBloom) EstimatedFillRatio() float64 {
-	return 1-math.Exp(-float64(this.c)/float64(this.s))
+	return 1 - math.Exp(-float64(this.c)/float64(this.s))
 }
 
 func (this *PartitionedBloom) FillRatio() float64 {
 	// Since this is partitioned, we will return the average fill ratio of all partitions
 	t := float64(0)
-	for i := uint(0); i < this.k; i++ {
-		t += (float64(this.b[i].Count())/float64(this.s))
+	for _, v := range this.b[:this.k] {
+		t += (float64(v.Count()) / float64(this.s))
 	}
-	return t/float64(this.k)
+	return t / float64(this.k)
 }
 
 func (this *PartitionedBloom) Add(item []byte) bloom.Bloom {
 	this.bits(item)
-	for i := uint(0); i < this.k; i++ {
-		this.b[i].Set(this.bs[i])
+	for i, v := range this.bs[:this.k] {
+		this.b[i].Set(v)
 	}
 	this.c++
 	return this
@@ -146,8 +146,8 @@ func (this *PartitionedBloom) Add(item []byte) bloom.Bloom {
 
 func (this *PartitionedBloom) Check(item []byte) bool {
 	this.bits(item)
-	for i := uint(0); i < this.k; i++ {
-		if !this.b[i].Test(this.bs[i]) {
+	for i, v := range this.bs[:this.k] {
+		if !this.b[i].Test(v) {
 			return false
 		}
 	}
@@ -162,12 +162,11 @@ func (this *PartitionedBloom) PrintStats() {
 	fmt.Printf("m = %d, n = %d, k = %d, s = %d, p = %f, e = %f\n", this.m, this.n, this.k, this.s, this.p, this.e)
 	fmt.Println("Total items:", this.c)
 
-	for i := uint(0); i < this.k; i++ {
-		c := this.b[i].Count()
+	for i, v := range this.b[:this.k] {
+		c := v.Count()
 		fmt.Printf("Bits in partition %d: %d (%.1f%%)\n", i, c, (float32(c)/float32(this.s))*100)
 	}
 }
-
 
 func (this *PartitionedBloom) bits(item []byte) {
 	this.h.Reset()
@@ -178,18 +177,17 @@ func (this *PartitionedBloom) bits(item []byte) {
 
 	// Reference: Less Hashing, Same Performance: Building a Better Bloom Filter
 	// URL: http://www.eecs.harvard.edu/~kirsch/pubs/bbbf/rsa.pdf
-	for i := uint(0); i < this.k; i++ {
-		this.bs[i] = (uint(a) + uint(b)*i) % this.s
+	for i, _ := range this.bs[:this.k] {
+		this.bs[i] = (uint(a) + uint(b)*uint(i)) % this.s
 	}
 }
 
 func makePartitions(k, s uint) []*bitset.BitSet {
 	b := make([]*bitset.BitSet, k)
 
-	for i := uint(0); i < k; i++ {
+	for i, _ := range b {
 		b[i] = bitset.New(s)
 	}
 
 	return b
 }
-

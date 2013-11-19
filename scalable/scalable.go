@@ -7,11 +7,11 @@
 package scalable
 
 import (
-	"hash"
-	"hash/fnv"
 	"fmt"
 	"github.com/reducedb/bloom"
 	"github.com/reducedb/bloom/partitioned"
+	"hash"
+	"hash/fnv"
 	"math"
 )
 
@@ -55,16 +55,15 @@ type ScalableBloom struct {
 	bfc func(uint) bloom.Bloom
 }
 
-
 var _ bloom.Bloom = (*ScalableBloom)(nil)
 
 // New initializes a new partitioned bloom filter.
 // n is the number of items this bloom filter predicted to hold.
 func New(n uint) bloom.Bloom {
 	var (
-		p float64 = 0.5
-		e float64 = 0.001
-		r float32 = 0.9
+		p float64   = 0.5
+		e float64   = 0.001
+		r float32   = 0.9
 		h hash.Hash = fnv.New64()
 	)
 
@@ -97,7 +96,7 @@ func (this *ScalableBloom) Reset() {
 	}
 
 	this.bfs = []bloom.Bloom{}
-    this.c = 0
+	this.c = 0
 	this.addBloomFilter()
 }
 
@@ -115,7 +114,7 @@ func (this *ScalableBloom) FillRatio() float64 {
 	for i := range this.bfs {
 		t += this.bfs[i].FillRatio()
 	}
-	return t/float64(len(this.bfs))
+	return t / float64(len(this.bfs))
 }
 
 func (this *ScalableBloom) Add(item []byte) bloom.Bloom {

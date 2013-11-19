@@ -7,13 +7,13 @@
 package standard
 
 import (
-	"hash/fnv"
-	"hash"
 	"fmt"
+	"hash"
+	"hash/fnv"
 
-	"github.com/willf/bitset"
-	"github.com/reducedb/bloom"
 	"encoding/binary"
+	"github.com/reducedb/bloom"
+	"github.com/willf/bitset"
 	"math"
 )
 
@@ -78,18 +78,18 @@ func New(n uint) bloom.Bloom {
 	var (
 		p float64 = 0.5
 		e float64 = 0.001
-		k uint = bloom.K(e)
-		m uint = bloom.M(n, p, e)
+		k uint    = bloom.K(e)
+		m uint    = bloom.M(n, p, e)
 	)
 
 	return &StandardBloom{
-		h: fnv.New64(),
-		n: n,
-		p: p,
-		e: e,
-		k: k,
-		m: m,
-		b: bitset.New(m),
+		h:  fnv.New64(),
+		n:  n,
+		p:  p,
+		e:  e,
+		k:  k,
+		m:  m,
+		b:  bitset.New(m),
 		bs: make([]uint, k),
 	}
 }
@@ -116,17 +116,17 @@ func (this *StandardBloom) SetErrorProbability(e float64) {
 }
 
 func (this *StandardBloom) EstimatedFillRatio() float64 {
-	return 1-math.Exp((-float64(this.c)*float64(this.k))/float64(this.m))
+	return 1 - math.Exp((-float64(this.c)*float64(this.k))/float64(this.m))
 }
 
 func (this *StandardBloom) FillRatio() float64 {
-	return float64(this.b.Count())/float64(this.m)
+	return float64(this.b.Count()) / float64(this.m)
 }
 
 func (this *StandardBloom) Add(item []byte) bloom.Bloom {
 	this.bits(item)
-	for i := uint(0); i < this.k; i++ {
-		this.b.Set(this.bs[i])
+	for _, v := range this.bs[:this.k] {
+		this.b.Set(v)
 	}
 	this.c++
 	return this
@@ -134,11 +134,12 @@ func (this *StandardBloom) Add(item []byte) bloom.Bloom {
 
 func (this *StandardBloom) Check(item []byte) bool {
 	this.bits(item)
-	for i := uint(0); i < this.k; i++ {
-		if !this.b.Test(this.bs[i]) {
+	for _, v := range this.bs[:this.k] {
+		if !this.b.Test(v) {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -153,7 +154,6 @@ func (this *StandardBloom) PrintStats() {
 	fmt.Printf("Total bits set: %d (%.1f%%)\n", c, float32(c)/float32(this.m)*100)
 }
 
-
 func (this *StandardBloom) bits(item []byte) {
 	this.h.Reset()
 	this.h.Write(item)
@@ -163,7 +163,7 @@ func (this *StandardBloom) bits(item []byte) {
 
 	// Reference: Less Hashing, Same Performance: Building a Better Bloom Filter
 	// URL: http://www.eecs.harvard.edu/~kirsch/pubs/bbbf/rsa.pdf
-	for i := uint(0); i < this.k; i++ {
-		this.bs[i] = (uint(a) + uint(b)*i) % this.m
+	for i, _ := range this.bs[:this.k] {
+		this.bs[i] = (uint(a) + uint(b)*uint(i)) % this.m
 	}
 }
