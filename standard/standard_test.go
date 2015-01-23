@@ -25,9 +25,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dataence/bloom"
-	"github.com/dataence/cityhash"
 	"github.com/spaolacci/murmur3"
+	"github.com/surgebase/bloom"
+	"github.com/surgebase/cityhash"
 )
 
 var (

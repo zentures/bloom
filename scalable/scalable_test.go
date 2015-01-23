@@ -25,11 +25,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dataence/bloom"
-	"github.com/dataence/bloom/partitioned"
-	"github.com/dataence/bloom/standard"
-	"github.com/dataence/cityhash"
 	"github.com/spaolacci/murmur3"
+	"github.com/surgebase/bloom"
+	"github.com/surgebase/bloom/partitioned"
+	"github.com/surgebase/bloom/standard"
+	"github.com/surgebase/cityhash"
 )
 
 var (

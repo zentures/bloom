@@ -20,9 +20,10 @@ import (
 	"hash/fnv"
 
 	"encoding/binary"
-	"github.com/dataence/bloom"
-	"github.com/willf/bitset"
 	"math"
+
+	"github.com/surgebase/bloom"
+	"github.com/willf/bitset"
 )
 
 // PartitionedBloom is a variant implementation of the standard bloom filter.
