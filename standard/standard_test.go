@@ -26,8 +26,8 @@ import (
 	"testing"
 
 	"github.com/spaolacci/murmur3"
-	"github.com/surgebase/bloom"
-	"github.com/surgebase/cityhash"
+	"github.com/surge/bloom"
+	"github.com/surge/cityhash"
 )
 
 var (

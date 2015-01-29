@@ -26,10 +26,10 @@ import (
 	"testing"
 
 	"github.com/spaolacci/murmur3"
-	"github.com/surgebase/bloom"
-	"github.com/surgebase/bloom/partitioned"
-	"github.com/surgebase/bloom/standard"
-	"github.com/surgebase/cityhash"
+	"github.com/surge/bloom"
+	"github.com/surge/bloom/partitioned"
+	"github.com/surge/bloom/standard"
+	"github.com/surge/cityhash"
 )
 
 var (

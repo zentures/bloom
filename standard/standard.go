@@ -22,7 +22,7 @@ import (
 	"encoding/binary"
 	"math"
 
-	"github.com/surgebase/bloom"
+	"github.com/surge/bloom"
 	"github.com/willf/bitset"
 )
 
