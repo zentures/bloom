@@ -22,8 +22,8 @@ import (
 	"encoding/binary"
 	"math"
 
-	"github.com/surge/bloom"
 	"github.com/willf/bitset"
+	"github.com/zhenjl/bloom"
 )
 
 // PartitionedBloom is a variant implementation of the standard bloom filter.

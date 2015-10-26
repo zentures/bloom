@@ -22,8 +22,8 @@ import (
 	"encoding/binary"
 	"math"
 
-	"github.com/surge/bloom"
 	"github.com/willf/bitset"
+	"github.com/zhenjl/bloom"
 )
 
 // StandardBloom is the classic bloom filter implementation
