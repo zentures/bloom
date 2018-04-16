@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	"github.com/spaolacci/murmur3"
-	"github.com/zhenjl/bloom"
+	"github.com/dataence/bloom"
 	"github.com/zhenjl/cityhash"
 )
 

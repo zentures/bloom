@@ -26,9 +26,9 @@ import (
 	"testing"
 
 	"github.com/spaolacci/murmur3"
-	"github.com/zhenjl/bloom"
-	"github.com/zhenjl/bloom/partitioned"
-	"github.com/zhenjl/bloom/standard"
+	"github.com/dataence/bloom"
+	"github.com/dataence/bloom/partitioned"
+	"github.com/dataence/bloom/standard"
 	"github.com/zhenjl/cityhash"
 )
 

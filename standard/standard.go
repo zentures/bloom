@@ -23,7 +23,7 @@ import (
 	"math"
 
 	"github.com/willf/bitset"
-	"github.com/zhenjl/bloom"
+	"github.com/dataence/bloom"
 )
 
 // StandardBloom is the classic bloom filter implementation
